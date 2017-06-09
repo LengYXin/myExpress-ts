@@ -10,7 +10,6 @@ import * as routes from './routes';
 let app = express();
 
 // view engine setup
-console.log("-------------", path.dirname(__dirname));
 app.set('views', path.join(path.dirname(__dirname), 'views'));
 app.set('view engine', 'pug');
 
@@ -26,6 +25,7 @@ routes.modularList.forEach(route => {
     let { path, router } = route;
     app.get(path, router);
 });
+
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
     var err: any = new Error('Not Found');
@@ -43,6 +43,5 @@ app.use(function (err, req, res, next) {
     res.status(err.status || 500);
     res.render('error');
 });
-console.log("object", app);
 export { app };
 

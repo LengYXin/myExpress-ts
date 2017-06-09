@@ -10,7 +10,7 @@ import * as http from 'http';
 /**
  * Get port from environment and store in Express.
  */
-
+console.log("process.env.PORT",this);
 var port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
 

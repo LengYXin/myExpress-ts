@@ -3,7 +3,30 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./build/www.js"
+    "start": "npm run watch",
+    "build": "npm run build-sass && npm run build-ts && npm run tslint && npm run copy-static-assets",
+    "serve": "node build/server.js",
+    "watch": "concurrently -k -p \"[{name}]\" -n \"TypeScript,Node\"  \"npm run watch-ts\" \"nodemon build/server.js\"",
+    "build-ts": "tsc",
+    "watch-ts": "tsc -w",
+    "test": "jest --forceExit",
+    "copy-static-assets": "node copyStaticAssets.js"
+  },
+  "jest": {
+    "globals": {
+      "__TS_CONFIG__": "tsconfig.json"
+    },
+    "moduleFileExtensions": [
+      "ts",
+      "js"
+    ],
+    "transform": {
+      "^.+\\.(ts|tsx)$": "./node_modules/ts-jest/preprocessor.js"
+    },
+    "testMatch": [
+      "**/test/**/*.test.(ts|js)"
+    ],
+    "testEnvironment": "node"
   },
   "dependencies": {
     "async": "^2.4.1",
@@ -25,8 +48,12 @@
     "@types/mongoose": "^4.7.16",
     "@types/morgan": "^1.7.32",
     "@types/node": "^7.0.29",
+    "@types/supertest": "^2.0.0",
+    "concurrently": "^3.4.0",
     "jest": "^20.0.4",
+    "nodemon": "^1.11.0",
     "shelljs": "^0.7.8",
+    "supertest": "^3.0.0",
     "ts-jest": "^20.0.5",
     "tslint": "^5.4.3",
     "typescript": "^2.3.4"
