@@ -1,88 +1,77 @@
-#!/usr/bin/env node
+import * as express from "express";
+import * as path from 'path';
+// import * as favicon  from 'serve-favicon';
+import * as logger from 'morgan';
+// import * as cookieParser  from 'cookie-parser';
+import * as bodyParser from 'body-parser';
+import * as routes from './routes';
+// error TS2688: Cannot find type definition file for 'localforage'.  运行 npm i --save-dev -d @types/localforage
 
-/**
- * Module dependencies.
- */
+class Server {
+    constructor(
+    ) {
+        this.app = express();
+        this.config();
+        this.routes();
+        this.init();
+    }
+    public static bootstrap(): Server {
+        return new Server();
+    }
+    app: express.Application;
+    /**
+     * 启动
+     */
+    init() {
+        this.app.set('port', process.env.PORT || '3000');
+        this.app.listen(this.app.get("port"), () => {
+            console.log("App is running at http://localhost:%d ", this.app.get("port"));
+        })
+    }
+    /**
+     * 注册路由
+     */
+    private routes() {
+        let router: express.Router = express.Router();
+        routes.modularList.map(x => {
+            console.log("---------", x);
+            this.app.get(x.path, x.router);
+        });
 
-import { app } from './app';
-import * as http from 'http';
+        // catch 404 and forward to error handler
+        this.app.use(function (req, res, next) {
+            var err: any = new Error('Not Found');
+            err.status = 404;
+            next(err);
+        });
 
-/**
- * Get port from environment and store in Express.
- */
-console.log("process.env.PORT",this);
-var port = normalizePort(process.env.PORT || '3000');
-app.set('port', port);
+        // error handler
+        this.app.use(function (err, req, res, next) {
+            // set locals, only providing error in development
+            res.locals.message = err.message;
+            res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-/**
- * Create HTTP server.
- */
-
-var server = http.createServer(app);
-
-/**
- * Listen on provided port, on all network interfaces.
- */
-
-server.listen(port);
-server.on('error', onError);
-server.on('listening', onListening);
-
-/**
- * Normalize a port into a number, string, or false.
- */
-
-function normalizePort(val: any) {
-  var port = parseInt(val, 10);
-
-  if (isNaN(port)) {
-    // named pipe
-    return val;
-  }
-
-  if (port >= 0) {
-    // port number
-    return port;
-  }
-
-  return false;
+            // render the error page
+            res.status(err.status || 500);
+            res.render('error');
+        });
+        // this.app.use(router);
+    }
+    /**
+     * 配置项
+     */
+    private config() {
+        // view engine setup
+        this.app.set('views', path.join(path.dirname(__dirname), 'views'));
+        this.app.set('view engine', 'pug');
+        // uncomment after placing your favicon in /public
+        //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+        this.app.use(logger('dev'));
+        this.app.use(bodyParser.json());
+        this.app.use(bodyParser.urlencoded({ extended: false }));
+        // app.use(cookieParser());
+        this.app.use(express.static(path.join(__dirname, 'public')));
+    }
 }
-
-/**
- * Event listener for HTTP server "error" event.
- */
-
-function onError(error: any) {
-  if (error.syscall !== 'listen') {
-    throw error;
-  }
-
-  var bind = typeof port === 'string'
-    ? 'Pipe ' + port
-    : 'Port ' + port;
-
-  // handle specific listen errors with friendly messages
-  switch (error.code) {
-    case 'EACCES':
-      console.error(bind + ' requires elevated privileges');
-      process.exit(1);
-      break;
-    case 'EADDRINUSE':
-      console.error(bind + ' is already in use');
-      process.exit(1);
-      break;
-    default:
-      throw error;
-  }
-}
-
-/**
- * Event listener for HTTP server "listening" event.
- */
-
-function onListening() {
-  var addr = server.address();
-  var bind = typeof addr === 'string'
-    ? 'pipe ' + addr
-    : 'port ' + addr.port;
-}
+// 启动
+Server.bootstrap();
