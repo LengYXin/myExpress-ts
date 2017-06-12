@@ -1,5 +1,5 @@
 import * as supertest from "supertest";
-import { Server } from "../api/server";
+import App from "../src/api/app";
 // const request = supertest("https://www.baidu.com/");
 
 describe("GET /", () => {
@@ -7,7 +7,7 @@ describe("GET /", () => {
     // request.get("/a")
     //   .expect(200)
     //   .end(done);
-    supertest(new Server().app)
+    supertest(new App().app)
       .get('/user')
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)
