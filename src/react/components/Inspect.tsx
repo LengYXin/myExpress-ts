@@ -6,7 +6,7 @@ import { SwiperSlide } from "./SwiperSlide";
 export class Inspect extends React.Component<any, any> {
     constructor(props: any) {
         super(props);
-        this.state = { Phonecheck: false, Phone: "18611711112" };
+        this.state = { Phonecheck: false, Phone: "18611111111" };
         this.handleChange = this.handleChange.bind(this);
         this.onInspect = this.onInspect.bind(this);
     }
@@ -26,13 +26,23 @@ export class Inspect extends React.Component<any, any> {
     onInspect() {
         if (!this.state.Phonecheck && /^1[34578]\d{9}$/.test(this.state.Phone)) {
             layer.open({ type: 2 });
-            setTimeout(() => {
-
-                this.props.onCheckThrough("FillIn");
-                layer.closeAll();
-
-            }, 2000);
-
+            fetch("/api/verifyCellPhone").then(response => response.json())
+                .then(data => {
+                    layer.closeAll();
+                    console.log("/api/verifyCellPhone", data);
+                    if (data.Data.Phone == this.state.Phone) {
+                        this.props.onCheckThrough("FillIn");
+                    } else {
+                        layer.open({
+                            content: '请输入正确的手机号'
+                            , btn: '我知道了'
+                        });
+                    }
+                })
+                .catch(e => {
+                    console.log("Oops, error", e);
+                    layer.closeAll();
+                });
         } else {
             layer.open({
                 content: '请输入正确的手机号'
@@ -60,14 +70,14 @@ export class Inspect extends React.Component<any, any> {
                                 <span className="help-block">请输入正确的手机号</span>
                                
                             }                            */}
-                           <span className="ft14 ce9 fl mt10 mb10"><span className=""> * </span>验证手机号</span>                            
+                            <span className="ft14 ce9 fl mt10 mb10"><span className=""> * </span>验证手机号</span>
                         </div>
                         <div className="col-lg-4 text-l">
-                             {
+                            {
                                 this.state.Phonecheck &&
                                 <span className="help-block ft16">请输入正确的手机号</span>
-                               
-                            }  
+
+                            }
                         </div>
                     </div>
                     <div className="form-group row text-center">

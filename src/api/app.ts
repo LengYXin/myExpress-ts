@@ -47,8 +47,8 @@ export default class App {
                     var router = routers[key];
                     if (routerName === key || key === "index") {
                         if (routerName === key && key === "index") {
-                            this.app.get("/", router);
-                            test.push("/");
+                            // this.app.get("/", router);
+                            // test.push("/");
                         } else {
                             this.app.get("/" + routerName, router);
                             test.push("/" + routerName);
@@ -62,6 +62,12 @@ export default class App {
             }
 
             // this.app.get(x.path, x.routers);
+        });
+        this.app.get("/", (req, res) => {
+            res.render("index", {
+                title: "路由列表",
+                routers: test
+            });
         });
         console.log("----------------- routers --------------------");
         console.log(test);

@@ -5,8 +5,11 @@ export let index = (req: Request, res: Response) => {
     title: "Express"
   });
 };
-export let getPhone = (req: Request, res: Response) => {
+export let verifyCellPhone = (req: Request, res: Response) => {
   res.json({
-    title: "Express"
+    code: 200,
+    Data: {
+      Phone: 18611111111
+    }
   });
 };

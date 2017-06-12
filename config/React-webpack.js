@@ -12,12 +12,12 @@ let react = {
         port: "3001",
         proxy: {
             '/api/': {
-                target: "",
+                target: "http://localhost:3000",
                 secure: false,
                 changeOrigin: true
             },
         },
-        progress: true,
+        // progress: true,
     },
     devtool: "source-map",
     plugins: [],

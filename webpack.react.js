@@ -1,7 +1,6 @@
 'use strict';
 
-const webpack = require('webpack');
-const Nodejs = require('./config/Node-webpack');
+// const webpack = require('webpack');
 const React = require('./config/React-webpack');
 
 module.exports = [
