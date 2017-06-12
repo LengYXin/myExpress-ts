@@ -8,7 +8,7 @@ import * as logger from 'morgan';
 import * as bodyParser from 'body-parser';
 import * as routes from './routes';
 // error TS2688: Cannot find type definition file for 'localforage'.  运行 npm i --save-dev -d @types/localforage
-console.log("config-------------------", AppConfig);
+// console.log("config-------------------", AppConfig);
 export default class App {
     constructor(PORT?) {
         this.app = express();
@@ -38,11 +38,34 @@ export default class App {
      */
     private routes() {
         let router: express.Router = express.Router();
+        let test = [];
         routes.modularList.map(x => {
-            console.log("---------", x);
-            this.app.get(x.path, x.router);
-        });
+            let routerName = x.name;
+            let routers = x.routers;
+            for (var key in routers) {
+                if (routers.hasOwnProperty(key)) {
+                    var router = routers[key];
+                    if (routerName === key || key === "index") {
+                        if (routerName === key && key === "index") {
+                            this.app.get("/", router);
+                            test.push("/");
+                        } else {
+                            this.app.get("/" + routerName, router);
+                            test.push("/" + routerName);
 
+                        }
+                    } else {
+                        this.app.get(`/${routerName}/${key}`, router);
+                        test.push(`/${routerName}/${key}`);
+                    }
+                }
+            }
+
+            // this.app.get(x.path, x.routers);
+        });
+        console.log("----------------- routers --------------------");
+        console.log(test);
+        console.log("----------------- routers --------------------");
         // catch 404 and forward to error handler
         this.app.use(function (req, res, next) {
             var err: any = new Error('Not Found');
@@ -67,7 +90,7 @@ export default class App {
      */
     private config() {
         // view engine setup
-        this.app.set('views', path.join(path.dirname(__dirname),'views'));
+        this.app.set('views', path.join(path.dirname(__dirname), 'views'));
         this.app.set('view engine', 'pug');
         // uncomment after placing your favicon in /public
         //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
