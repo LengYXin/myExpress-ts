@@ -1,4 +1,5 @@
-/// <reference path="../typings/tsd.d.ts" />
+/// <reference path="../../typings/typings.d.ts" />
+import * as AppConfig from "../../AppConfig.json";
 import * as express from "express";
 import * as path from 'path';
 // import * as favicon  from 'serve-favicon';
@@ -6,7 +7,6 @@ import * as logger from 'morgan';
 // import * as cookieParser  from 'cookie-parser';
 import * as bodyParser from 'body-parser';
 import * as routes from './routes';
-import * as AppConfig from "../AppConfig.json";
 // error TS2688: Cannot find type definition file for 'localforage'.  运行 npm i --save-dev -d @types/localforage
 console.log("config-------------------", AppConfig);
 export default class App {
@@ -67,7 +67,7 @@ export default class App {
      */
     private config() {
         // view engine setup
-        this.app.set('views', path.join(path.dirname(__dirname), 'views'));
+        this.app.set('views', path.join(path.dirname(__dirname),'views'));
         this.app.set('view engine', 'pug');
         // uncomment after placing your favicon in /public
         //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
@@ -75,7 +75,9 @@ export default class App {
         this.app.use(bodyParser.json());
         this.app.use(bodyParser.urlencoded({ extended: false }));
         // app.use(cookieParser());
-        this.app.use(express.static(path.join(__dirname, 'public')));
+        this.app.use(express.static(path.join(path.dirname(__dirname), 'public')));
+        this.app.use(express.static(path.join(path.dirname(__dirname), 'react')));
+
         this.app.use((req, res, next) => {
             // After successful login, redirect back to the intended page
             if (!req.user &&

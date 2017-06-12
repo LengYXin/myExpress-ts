@@ -4,13 +4,13 @@
   "private": true,
   "scripts": {
     "start": "npm run watch",
-    "build": "npm run build-sass && npm run build-ts && npm run tslint && npm run copy-static-assets",
-    "serve": "node build/server.js",
-    "watch": "concurrently -k -p \"[{name}]\" -n \"TypeScript,Node\"  \"npm run watch-ts\" \"nodemon build/server.js\"",
+    "build": "webpack && npm run copy-static-assets",
+    "serve": "node build/server/server.js",
+    "watch": "concurrently -k -p \"[{name}]\" -n \"TypeScript,Node\"  \"npm run watch-ts\" \"nodemon build/server/server.js\"",
     "build-ts": "tsc",
     "watch-ts": "tsc -w",
     "test": "jest --forceExit",
-    "copy-static-assets": "node copyStaticAssets.js"
+    "copy-static-assets": "node config/copyStaticAssets.js"
   },
   "jest": {
     "globals": {
@@ -38,8 +38,12 @@
     "mongoose": "^4.10.5",
     "morgan": "^1.8.2",
     "passport": "^0.3.2",
+    "plupload": "^2.3.2",
     "pug": "^2.0.0-rc.2",
-    "serve-favicon": "^2.4.3"
+    "react": "^15.5.4",
+    "react-dom": "^15.5.4",
+    "serve-favicon": "^2.4.3",
+    "swiper": "^3.4.2"
   },
   "devDependencies": {
     "@types/async": "^2.0.40",
@@ -52,13 +56,18 @@
     "@types/morgan": "^1.7.32",
     "@types/node": "^7.0.29",
     "@types/passport": "^0.3.3",
+    "@types/react": "^15.0.27",
+    "@types/react-dom": "^15.5.0",
     "@types/supertest": "^2.0.0",
     "concurrently": "^3.4.0",
+    "css-loader": "^0.28.4",
     "jest": "^20.0.4",
     "nodemon": "^1.11.0",
     "shelljs": "^0.7.8",
+    "style-loader": "^0.18.2",
     "supertest": "^3.0.0",
     "ts-jest": "^20.0.5",
+    "ts-loader": "^2.1.0",
     "tslint": "^5.4.3",
     "typescript": "^2.3.4"
   }
