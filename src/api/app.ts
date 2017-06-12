@@ -63,6 +63,7 @@ export default class App {
 
             // this.app.get(x.path, x.routers);
         });
+        test.push("/react.html");
         this.app.get("/", (req, res) => {
             res.render("index", {
                 title: "路由列表",
